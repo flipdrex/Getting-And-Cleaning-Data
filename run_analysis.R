@@ -32,5 +32,17 @@ active<-as.factor(fulldata$activity)
 levels(active)<-tolower(gsub("_","",activities$V2))
 fulldata$activity<-active
 
+tidyset<-matrix(nrow =180,ncol = dim(fulldata)[2])
+colnames(tidyset)<-colnames(fulldata)
 
+counter<-1
+for (subject in 1:30){
+  for (action in levels(active)){
+    tempset<-fulldata[fulldata$activity == action & fulldata$subjectnumber == subject,]
+    tidyset[counter,1:2]<-c(subject,action)
+    tidyset[counter,3:68]<-colMeans(tempset[,3:68])
+    counter<-counter+1
+  }
+}
 
+write.table(tidyset,"tidydataset.txt",row.names = FALSE)
